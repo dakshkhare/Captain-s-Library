@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Library Management System{% endblock %}
+
+{% block heading %}Welcome to Library Management System{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <form method="POST" class="login-form">
+        <div class="form-group">
+            <select name="user_type" required class="form-control">
+                <option value="student">Student</option>
+                <option value="admin">Administrator</option>
+            </select>
+        </div>
+        <div class="form-group student-input">
+            <input type="text" name="roll_number" placeholder="Roll Number" required class="form-control">
+        </div>
+        <div class="form-group admin-input" style="display: none;">
+            <input type="text" name="username" placeholder="Admin Username" class="form-control">
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <div class="auth-links">
+        <p>New student? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
+</div>
+
+<script>
+document.querySelector('select[name="user_type"]').addEventListener('change', function() {
+    const isAdmin = this.value === 'admin';
+    document.querySelector('.student-input').style.display = isAdmin ? 'none' : 'block';
+    document.querySelector('.admin-input').style.display = isAdmin ? 'block' : 'none';
+    
+    // Reset required attributes
+    document.querySelector('input[name="roll_number"]').required = !isAdmin;
+    document.querySelector('input[name="username"]').required = isAdmin;
+});
+</script>
+{% endblock %}

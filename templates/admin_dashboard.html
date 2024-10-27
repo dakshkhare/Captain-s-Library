@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Library Management System{% endblock %}
+
+{% block heading %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+    <section class="add-book-section">
+        <h2>Add New Book</h2>
+        <form method="POST" action="{{ url_for('add_book') }}" class="add-book-form">
+            <div class="form-group">
+                <input type="text" name="name" placeholder="Book Name" required class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="number" name="quantity" placeholder="Quantity" required min="1" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Book</button>
+        </form>
+    </section>
+
+    <section class="pending-requests-section">
+        <h2>Pending Requests</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Book</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in pending_requests %}
+                    <tr>
+                        <td>{{ request.student_name }}</td>
+                        <td>{{ request.book_name }}</td>
+                        <td>{{ request.borrow_date.strftime('%Y-%m-%d') }}</td>
+                        <td class="action-buttons">
+                            <a href="{{ url_for('handle_request', borrow_id=request.id, action='approve') }}" 
+                               class="btn approve-btn">Approve</a>
+                            <a href="{{ url_for('handle_request', borrow_id=request.id, action='reject') }}" 
+                               class="btn reject-btn">Reject</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No pending requests</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="inventory-section">
+        <h2>Book Inventory</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Available Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ book.name }}</td>
+                        <td>{{ book.quantity }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="text-center">No books in inventory</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

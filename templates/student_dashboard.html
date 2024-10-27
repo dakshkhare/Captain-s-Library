@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - Library Management System{% endblock %}
+
+{% block heading %}Welcome, {{ student.name }}{% endblock %}
+
+{% block content %}
+<div class="student-dashboard">
+    {% if student.has_book %}
+        <section class="borrowed-book-section">
+            <h2>Currently Borrowed Book</h2>
+            <div class="borrowed-book">
+                <p class="book-name">{{ borrowed_book.name }}</p>
+                <a href="{{ url_for('return_book') }}" class="btn return-btn">Return Book</a>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="available-books-section">
+        <h2>Available Books</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Available Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ book.name }}</td>
+                        <td>{{ book.quantity }}</td>
+                        <td>
+                            {% if not student.has_book and book.quantity > 0 %}
+                                <a href="{{ url_for('borrow_book', book_id=book.id) }}" 
+                                   class="btn borrow-btn">Borrow</a>
+                            {% elif student.has_book %}
+                                <span class="text-muted">Already borrowed a book</span>
+                            {% else %}
+                                <span class="text-muted">Not available</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No books available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
